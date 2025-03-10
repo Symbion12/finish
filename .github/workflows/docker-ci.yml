@@ -24,11 +24,11 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t symbion12/ytest-repo:latest .
-          docker tag symbion12/ytest-repo:latest symbion12/ytest-repo:${{ github.sha }}
+          docker tag dimonsymbion/devops:latest dimonsymbion/devops:${{ github.sha }}
 
       - name: Push Docker Image
         run: |
-          docker push symbion12/ytest-repo:latest
-          docker push symbion12/ytest-repo:${{ github.sha }}    
+          docker push dimonsymbion/devops:latest
+          docker push dimonsymbion/devops:${{ github.sha }}    
 
     
