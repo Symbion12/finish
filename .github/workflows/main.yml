@@ -29,8 +29,8 @@ jobs:
       - name: Build Docker image
         run: |
           TAG=$(git describe --tags --always)
-          docker build -t hub.docker.com/skillfactory/testapp:$TAG .
-          docker push hub.docker.com/skillfactory/testapp:$TAG
+          docker build -t docker.io/skillfactory/testapp:$TAG .
+          docker push docker.io/skillfactory/testapp:$TAG
   deploy:
     runs-on: ubuntu-latest
     needs: build
