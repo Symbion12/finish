@@ -11,4 +11,4 @@ terraform init
 Проверка, какие изменения будут внесены:
 terraform plan
 Развертывание инфраструктуры:
-terraform apply
+ыфвterraform apply
