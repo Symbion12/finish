@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up kubectl
-        uses: kubectl-action/setup-kubectl@v1
+        uses: azure/setup-kubectl@v3
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }} 
       - name: Check Kubernetes Cluster
