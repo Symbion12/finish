@@ -46,11 +46,7 @@ jobs:
         uses: azure/setup-kubectl@v3
         with:
           kubeconfig: ${{ secrets.KUBE_CONFIG }} 
-      - name: Configure Kubeconfig  
-        run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
-          kubectl config use-context kubernetes-admin@kubernetes
+
       - name: Check Kubernetes Cluster
         run: kubectl cluster-info
           
