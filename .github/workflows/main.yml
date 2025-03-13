@@ -48,7 +48,7 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }} 
 
       - name: Check Kubernetes Cluster
-        run: kubectl cluster-info
+        run: sudo kubectl cluster-info
           
 
       - name: Set up Helm
