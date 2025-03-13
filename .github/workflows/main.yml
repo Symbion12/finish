@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'  # Триггерим только при пуше тегов
+  pull_request:
+    branches:
+      - main  # Триггерим при PR в ветку main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Клонировать репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Шаг 2: Установить kubectl
+      - name: Set up kubectl
+        uses: kubectl-action/setup-kubectl@v1
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}  # Устанавливаем kubeconfig из GitHub Secrets
+
+      # Шаг 3: Проверка доступности Kubernetes
+      - name: Check Kubernetes Cluster
+        run: kubectl cluster-info
+
+      # Шаг 4: Установить Helm
+      - name: Set up Helm
+        uses: helm/setup-helm@v1
+        with:
+          version: 'v3.9.0'  # Вы можете указать версию Helm, которая вам нужна
+
+      # Шаг 5: Деплой в Kubernetes с использованием Helm
+      - name: Deploy to Kubernetes with Helm
+        run: |
+          # Извлекаем тег Git
+          TAG=$(git describe --tags --always)
+
+          # Проводим деплой с использованием Helm
+          helm upgrade --install my-app ./diplom --set image.tag=$TAG
+
+          # Проверяем статус деплоя
+          kubectl rollout status deployment/my-app
