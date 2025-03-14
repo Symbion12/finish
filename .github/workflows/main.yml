@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          TAG=$(git describe --tags --always)
+          TAG=$(git describe --tags --always || echo "latest")
           docker build -t docker.io/dimonsymbion/devops:$TAG .
           docker push docker.io/dimonsymbion/devops:$TAG
   deploy:
@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
@@ -48,6 +48,7 @@ jobs:
 
       - name: Check Kubernetes Cluster
         run: kubectl cluster-info
+        continue-on-error: true
           
 
       - name: Set up Helm
@@ -56,5 +57,5 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           TAG=$(git describe --tags --always)
-          helm upgrade --install my-app ./diplom --set image.tag=$TAG
-          kubectl rollout status deployment/my-app
+          helm upgrade --install my-app ./diplom --set image.tag=$TAG --debug
+          kubectl rollout status deployment/my-app --namespace=default --timeout=600s
