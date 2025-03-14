@@ -43,8 +43,8 @@ jobs:
 
       - name: Set up kubectl
         uses: azure/setup-kubectl@v3
-#        with:
- #         kubeconfig: ${{ secrets.KUBE_CONFIG }} 
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }} 
 
       - name: Check Kubernetes Cluster
         run: kubectl cluster-info
