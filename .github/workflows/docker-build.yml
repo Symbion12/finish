@@ -40,6 +40,6 @@ jobs:
           script: |
             kubectl config set-cluster kubernetes --server=https://10.10.0.3:6443
             kubectl config set-credentials my-user --token=$K8S_TOKEN
-            kubectl config set-context my-context --cluster=kubernetes --user=kubernetes-admin@kubernetes
+            kubectl config set-context my-context --cluster=kubernetes --user=my-user
             kubectl config use-context my-context
             helm upgrade --install diplom ./chart --set image.tag=${GITHUB_REF#refs/tags/}
