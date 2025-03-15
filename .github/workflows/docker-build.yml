@@ -32,7 +32,7 @@ jobs:
 #          docker push $IMAGE_NAME
 
       - name: Deploy to Kubernetes
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.K8S_SERVER }}  # IP твоего сервера
           username: ${{ secrets.K8S_USERNAME }}  # Пользователь для SSH
