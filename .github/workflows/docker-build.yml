@@ -42,4 +42,4 @@ jobs:
             kubectl config set-credentials my-user --token=${{ secrets.K8S_TOKEN }}
             kubectl config set-context my-context --cluster=kubernetes --user=my-user
             kubectl config use-context my-context
-            helm upgrade --install diplom ./chart --set image.tag=${GITHUB_REF#refs/tags/}
+            helm upgrade --install diplom /home/finish/diplom --set image.tag=${GITHUB_REF#refs/tags/}
