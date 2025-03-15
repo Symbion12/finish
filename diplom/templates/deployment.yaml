@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-app
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Release.Name }}-app
@@ -12,6 +12,8 @@ spec:
       labels:
         app: {{ .Release.Name }}-app
     spec:
+      imagePullSecrets:
+        - name: dockerhub-secret
       containers:
         - name: app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -26,13 +28,7 @@ spec:
               value: "{{ .Values.env.DB_USER }}"
             - name: DB_PASS
               value: "{{ .Values.env.DB_PASS }}"
-          volumeMounts:
-            - name: app-volume
-              mountPath: /app
           command:
-            - sh
+            - "sh"
             - "-c"
             - "python manage.py migrate && python manage.py runserver 0.0.0.0:3003"
-      volumes:
-        - name: app-volume
-          emptyDir: {}
