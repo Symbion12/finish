@@ -15,7 +15,7 @@ image:
 
 service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
+  type: NodePort
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 3003
 
@@ -48,6 +48,7 @@ postgres:
   dbPassword: "password"
   port: 5432
   volumeSize: 1Gi
+  volumeName: postgres-pv
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
