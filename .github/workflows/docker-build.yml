@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME="dimonsymbion/devops:${GITHUB_REF#refs/tags/}"
+          IMAGE_NAME="dimonsymbion/devops:${GITHUB_REF##*/}"
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
