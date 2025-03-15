@@ -1,0 +1,95 @@
+---
+- name: Настройка Kubernetes-кластера
+  hosts: k8s_master,k8s_app
+  become: yes
+  vars:
+    ansible_user: user1
+  tasks:
+    - name: Установка зависимостей
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+        update_cache: yes
+
+    - name: Добавление ключа Kubernetes
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Добавление репозитория Kubernetes
+      apt_repository:
+        repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+       state: present
+
+    - name: Установка kubeadm, kubelet и kubectl
+      apt:
+        name:
+          - kubeadm
+          - kubelet
+          - kubectl
+        state: present
+        update_cache: yes
+
+    - name: Удаление swap из fstab
+      replace:
+        path: /etc/fstab
+        regexp: '(^.*swap.*$)'
+        replace: '# \1'
+
+    - name: Перезапуск службы kubelet
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: restarted
+
+- name: Настройка master-ноды
+  hosts: k8s_master
+  become: yes
+  vars:
+    ansible_user: user1
+  tasks:
+    - name: Инициализация Kubernetes-кластера
+      command: sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+      register: k8s_init
+      run_once: yes
+  
+    - name: Создание .kube директории
+      file:
+        path: /home/user1/.kube
+        state: directory
+        mode: '0755'
+        owner: user1
+        group: user1
+
+    - name: Копирование конфигурационного файла Kubernetes
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/user1/.kube/config
+        remote_src: yes
+        owner: user1
+        group: user1
+
+    - name: Получение токена для worker-узлов
+      command: kubeadm token create --print-join-command
+      register: join_command
+      run_once: yes
+
+- name: Настройка worker-ноды
+  hosts: k8s_app
+  become: yes
+  vars:
+    ansible_user: user1
+  tasks:
+    - name: Получение команды kubeadm join с master-узла
+      command: kubeadm token create --print-join-command
+      register: kubeadm_join_command
+      delegate_to: 89.169.153.112
+    - name: Присоединение worker-узла к кластеру
+      command: "{{ kubeadm_join_command.stdout }}"
+
+
