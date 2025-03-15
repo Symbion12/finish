@@ -34,9 +34,9 @@ jobs:
       - name: Deploy to Kubernetes
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.K8S_SERVER }}  # IP твоего сервера
-          username: ${{ secrets.K8S_USERNAME }}  # Пользователь для SSH
-          password: ${{ secrets.K8S_PASSWORD }}  # Твой приватный ключ для подключения к серверу
+          host: 89.169.146.216  # IP твоего сервера
+          username: user1  # Пользователь для SSH
+          password: 1111  # Твой приватный ключ для подключения к серверу
           script: |
             kubectl config set-cluster kubernetes --server=https//:10.10.0.3:6443
             kubectl config set-credentials my-user --token=$K8S_TOKEN
